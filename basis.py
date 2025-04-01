@@ -1,5 +1,5 @@
 from numpy import *
-from numba import jit
+#from numba import jit
 #read the single spin at position pos, 0:up 1:down#
 #@jit(nopython=True)
 def onebit(num : int, pos: int)-> bool:
