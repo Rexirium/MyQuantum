@@ -17,7 +17,7 @@ def twobits_sign(dig:tuple, basis):
     bits1 = (basis&(1<<dig[1]))>>dig[1]
     return np.where(bits0 == bits1, 1., -1.)
 
-## the most powerful improvement!! Pairing the basis according to a spin flip at position pos
+## the most powerful improvement!! Pairing the basis according to a qubit flip at position pos
 # , breaking the indices 0,1,...,2^L-1 into two subarrays 
 def flipp_pair(dig:int, basis, control=None):
     mask1 = ((basis&(1<<dig))>>dig).astype(bool)

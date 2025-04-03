@@ -45,7 +45,7 @@ def makeHamiltonian(graph:nx.Graph):
 
 # Cost function evaluated as F(theta)=<psi(theta)|H_c|psi(theta)>
 def CostFunction(theta:np.ndarray, depth:int, qustate:QuRegister, hamil_cost:list[Operator]):
-    qustate.initalize() # initialized as \otimes_i |+_i>=1/sqrt{dim}*\sum_z |z>
+    qustate.initalize(inistate = '+') # initialized as \otimes_i |+_i>=1/sqrt{dim}*\sum_z |z>
     for layer in range(depth):  # theta=(gamma,beta)
         qustate.Evolving(hamil_cost, theta[layer])
         qustate.TField_evolve(theta[layer + depth])
