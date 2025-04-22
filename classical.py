@@ -7,7 +7,7 @@ def MinObjective(Lsize:int, graph:nx.Graph):
     dim = 1<<Lsize
     summ = np.zeros(dim)
     for (u,v,wt) in graph.edges.data('weight'):
-        sign = twobits_sign((u,v), np.arange(dim))
+        sign = twobits_sign(np.arange(dim), (u,v))
         summ += wt*sign
     Cmin = np.min(summ)
     min_config = np.where(summ==Cmin)[0]

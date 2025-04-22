@@ -64,7 +64,7 @@ def QAOA_procedure(hamil_cost, Lsize:int, depth:int, method = 'BFGS'):
     return Min.fun, Min.x, runtime
 
 if __name__=='__main__':
-    L, p = 10, 6
+    L, p = 10, 5
     graph = nx.Graph()
     for (u,v) in nx.random_regular_graph(3, L).edges():
         graph.add_edge(u, v, weight = 1)

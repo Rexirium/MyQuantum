@@ -103,31 +103,31 @@ class QuRegister:
     # 'gate_ret' suffix means the method will return the modified state but not change the state inplace
     
     def Zgate(self, pos:int):
-        self.state *= onebit_sign(self.num_qubits - pos, self.basis)
+        self.state *= onebit_sign(self.basis, self.num_qubits - pos)
         return
     
     def Zgate_ret(self, pos:int):
-        return self.state*onebit_sign(self.num_qubits - pos, self.basis)
+        return self.state*onebit_sign(self.basis, self.num_qubits - pos)
     
     # exchange the coefficient of base |zold> and |znew>
     def Xgate(self, pos:int):
-        zold, znew = flipp_pair(self.num_qubits - pos, self.basis)
+        zold, znew = flipp_pair(self.basis, self.num_qubits - pos)
         self.state[zold], self.state[znew] = self.state[znew], self.state[zold]
         return
         
     def Xgate_ret(self, pos:int):
-        zold, znew = flipp_pair(self.num_qubits - pos, self.basis)
+        zold, znew = flipp_pair(self.basis, self.num_qubits - pos)
         newstate = np.zeros(self.dim, dtype=complex)
         newstate[zold], newstate[znew] = self.state[znew], self.state[zold]
         return newstate  
         
     def Ygate(self, pos:int):
-        zold,znew = flipp_pair(self.num_qubits-pos, self.basis)
+        zold,znew = flipp_pair(self.basis, self.num_qubits - pos)
         self.state[zold], self.state[znew] = -1j*self.state[znew], 1j*self.state[zold]
         return
     
     def Ygate_ret(self, pos:int):
-        zold,znew = flipp_pair(self.num_qubits-pos, self.basis)
+        zold,znew = flipp_pair(self.basis, self.num_qubits-pos)
         newstate = np.zeros(self.dim, dtype=complex)
         newstate[zold], newstate[znew] = -1j*self.state[znew], 1j*self.state[zold]
         return newstate 
@@ -150,7 +150,7 @@ class QuRegister:
     # Hadmard gate at 'pos'
     def Hgate(self, pos:int):
         co = 1./ma.sqrt(2)
-        zold, znew = flipp_pair(self.num_qubits - pos, self.basis)
+        zold, znew = flipp_pair(self.basis, self.num_qubits - pos)
         statplus = self.state[zold] + self.state[znew]
         statminus = self.state[zold] - self.state[znew]
         self.state[zold], self.state[znew] = co*statplus, co*statminus
@@ -158,7 +158,7 @@ class QuRegister:
         
     def Hgate_ret(self, pos:int):
         co = 1./ma.sqrt(2)
-        zold, znew = flipp_pair(self.num_qubits - pos, self.basis)
+        zold, znew = flipp_pair(self.basis, self.num_qubits - pos)
         statplus = self.state[zold] + self.state[znew]
         statminus = self.state[zold] - self.state[znew]
         newstate=np.zeros(self.dim,dtype=complex)
@@ -168,22 +168,22 @@ class QuRegister:
     # two bit gate of ZZ XX
     def ZZgate(self, pos:tuple):
         dig = self.num_qubits - pos[0], self.num_qubits - pos[1]
-        self.state *= twobits_sign(dig, self.basis)
+        self.state *= twobits_sign(self.basis, dig)
         return
         
     def ZZgate_ret(self, pos:tuple):
         dig = self.num_qubits - pos[0], self.num_qubits - pos[1]
-        return self.state*twobits_sign(dig, self.basis)
+        return self.state*twobits_sign(self.basis, dig)
     
     def XXgate(self, pos:tuple):
         dig = self.num_qubits-pos[0], self.num_qubits-pos[1]
-        zold, znew = flipp_twopairs(dig, self.basis)
+        zold, znew = flipp_twopairs(self.basis, dig)
         self.state[zold], self.state[znew] = self.state[znew], self.state[zold]
         return
         
     def XXgate_ret(self, pos:tuple):
         dig = self.num_qubits-pos[0], self.num_qubits-pos[1]
-        zold, znew = flipp_twopairs(dig, self.basis)
+        zold, znew = flipp_twopairs(self.basis, dig)
         newstate = np.zeros(self.dim, dtype=complex)
         newstate[zold], newstate[znew] = self.state[znew], self.state[zold]
         return newstate
@@ -191,26 +191,26 @@ class QuRegister:
     # Controlled gate of X and Z, with control qubit and target qubit pos=(cpos,tpos)
     def CXgate(self, pos:tuple):
         dig = self.num_qubits - pos[0], self.num_qubits - pos[1]
-        zold, znew = flipp_pair(dig[1], self.basis, control=dig[0])           
+        zold, znew = flipp_pair(self.basis, dig[1], control=dig[0])           
         self.state[zold], self.state[znew] = self.state[znew], self.state[zold]
         return
         
     def CXgate_ret(self, pos:tuple):
         dig = self.num_qubits - pos[0], self.num_qubits - pos[1]
-        zold, znew = flipp_pair(dig[1], self.basis, control=dig[0])
+        zold, znew = flipp_pair(self.basis, dig[1], control=dig[0])
         newstate = self.state.copy()
         newstate[zold], newstate[znew] = self.state[znew], self.state[zold]
         return newstate
         
     def CYgate(self, pos:tuple):
         dig = self.num_qubits - pos[0], self.num_qubits - pos[1]
-        zold, znew = flipp_pair(dig[1], self.basis, control = dig[0])
+        zold, znew = flipp_pair(self.basis, dig[1], control = dig[0])
         self.state[zold], self.state[znew] = -1j*self.state[znew], 1j*self.state[zold]
         return
     
     def CYgate_ret(self, pos:tuple):
         dig = self.num_qubits - pos[0], self.num_qubits - pos[1]
-        zold, znew = flipp_pair(dig[1], self.basis, control = dig[0])
+        zold, znew = flipp_pair(self.basis, dig[1], control = dig[0])
         newstate = self.state.copy()
         newstate[zold], newstate[znew] = -1j*self.state[znew], 1j*self.state[zold]
         return newstate
@@ -236,7 +236,7 @@ class QuRegister:
         finalstate = np.zeros(self.dim, dtype=complex)
         newstate = np.zeros(self.dim, dtype=complex)
         for dig in range(self.num_qubits):
-            zold, znew = flipp_pair(dig, self.basis)
+            zold, znew = flipp_pair(self.basis, dig)
             newstate[zold], newstate[znew] = self.state[znew], self.state[zold]
             finalstate -= newstate
         self.state = finalstate
@@ -246,7 +246,7 @@ class QuRegister:
         finalstate = np.zeros(self.dim, dtype=complex)
         newstate = np.zeros(self.dim, dtype=complex)
         for dig in range(self.num_qubits):
-            zold, znew = flipp_pair(dig, self.basis)
+            zold, znew = flipp_pair(self.basis, dig)
             newstate[zold], newstate[znew] = self.state[znew], self.state[zold]
             finalstate -= newstate
         return finalstate
@@ -267,7 +267,7 @@ class QuRegister:
 
     # parametrized evolution of the form exp(-i para * gate)
     def Zevolve(self, pos:int, para:float):
-        sign = onebit_sign(self.num_qubits-pos, self.basis)
+        sign = onebit_sign(self.basis, self.num_qubits-pos)
         co, isi = ma.cos(para), ma.sin(para)*1j
         phase = co - isi*sign
         self.state *= phase
@@ -275,7 +275,7 @@ class QuRegister:
     
     def Xevolve(self, pos:int, para:float):
         co, isi = ma.cos(para), 1j*ma.sin(para)
-        zold,znew = flipp_pair(self.num_qubits-pos, self.basis)
+        zold,znew = flipp_pair(self.basis, self.num_qubits-pos)
         statold, statnew = self.state[zold], self.state[znew]
         self.state[zold], self.state[znew] = co*statold - isi*statnew,\
             isi*statold - co*statnew
@@ -283,7 +283,7 @@ class QuRegister:
     
     def Yevolve(self, pos:int, para:float):
         co, si = ma.cos(para), ma.sin(para)
-        zold, znew = flipp_pair(self.num_qubits-pos, self.basis)
+        zold, znew = flipp_pair(self.basis, self.num_qubits-pos)
         statold, statnew = self.state[zold], self.state[znew]
         self.state[zold], self.state[znew] = co*statold + si*statnew,\
             -si*statold + co*statnew
@@ -292,7 +292,7 @@ class QuRegister:
     def ZZevolve(self, pos:tuple, para:float):
         co, isi = ma.cos(para), 1j*ma.sin(para)
         dig = self.num_qubits-pos[0], self.num_qubits-pos[1]
-        sign = twobits_sign(dig, self.basis)
+        sign = twobits_sign(self.basis, dig)
         phase = co - isi*sign # exp(-1j*para)
         self.state *= phase
         return
@@ -300,7 +300,7 @@ class QuRegister:
     def XXevolve(self, pos:tuple, para:float):
         co, isi = ma.cos(para), 1j*ma.sin(para)
         dig = self.num_qubits - pos[0], self.num_qubits-pos[1]
-        zold, znew = flipp_twopairs(dig, self.basis)
+        zold, znew = flipp_twopairs(self.basis, dig)
         statold, statnew = self.state[zold], self.state[znew]
         self.state[zold], self.state[znew] = co*statold - isi*statnew,\
             isi*statold - co*statnew
@@ -320,7 +320,7 @@ class QuRegister:
     def TField_evolve(self, para:float):
         co, isi = ma.cos(para), 1j*ma.sin(para)
         for dig in range(self.num_qubits):
-            zold,znew = flipp_pair(dig, self.basis)
+            zold,znew = flipp_pair(self.basis, dig)
             statold, statnew = self.state[zold], self.state[znew]
             self.state[zold], self.state[znew] = co*statold + isi*statnew,\
                 isi*statold + co*statnew
@@ -370,7 +370,7 @@ class QuRegister:
         return res
     
     def proj_measureX(self, pos:int, kill=False):
-        zold, znew = flipp_pair(self.num_qubits-pos, self.basis)
+        zold, znew = flipp_pair(self.basis, self.num_qubits - pos)
         filtered = self.state[zold] + self.state[znew]
         probr = 0.5*Norm2(filtered)
         probl = 1. - probr
@@ -391,7 +391,7 @@ class QuRegister:
         return res
     
     def proj_measureX_multi(self, pos:int, counts):
-        zold, znew = flipp_pair(self.num_qubits-pos, self.basis)
+        zold, znew = flipp_pair(self.basis, self.num_qubits - pos)
         filtered = self.state[zold] + self.state[znew]
         probr = 0.5*Norm2(filtered)
         probl = 1. - probr
@@ -427,7 +427,7 @@ class QuRegister:
     
     # weak measurement at position 'pos' on spin X. return the coordinate of the probe
     def weak_measureX(self, pos:int, lam:float, sigma:float,):
-        zold, znew = flipp_pair(self.num_qubits - pos, self.basis)
+        zold, znew = flipp_pair(self.basis, self.num_qubits - pos)
         filtered = self.state[zold] + self.state[znew]
         probr = 0.5*Norm2(filtered)
         probl = 1. - probr
@@ -445,7 +445,7 @@ class QuRegister:
         return xres
     
     def weak_measureX_multi(self, pos:int, lam:float, sigma:float, counts):
-        zold, znew = flipp_pair(self.num_qubits - pos, self.basis)
+        zold, znew = flipp_pair(self.basis, self.num_qubits - pos)
         filtered = self.state[zold] + self.state[znew]
         probr = 0.5*Norm2(filtered)
         xis = rng.random(size = counts)
@@ -473,7 +473,7 @@ def Expectation(qustate:QuRegister, hamilton:list[Operator]):
         value += op.coeff*np.dot(qustate.state.conj(), newstate)
     if TFflag:
         for dig in range(qustate.num_qubits):
-            zold, znew = flipp_pair(dig, qustate.basis)
+            zold, znew = flipp_pair(qustate.basis, dig)
             value -= 2*np.dot(qustate.state[znew].conj(), qustate.state[zold])
     return value.real
             
