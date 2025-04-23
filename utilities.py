@@ -18,7 +18,12 @@ def onebit_sign(basis, dig:int):
 
 # sign of every basis at two position correlated dig=(dig0,dig1)
 def twobits_sign(basis, dig:tuple):
-    xorbits = ((basis >> dig[0])^(basis >> dig[1])) & 1
+    d0, d1 = sorted(dig)
+    shifted = basis >> d0
+    bits0 = shifted & 1
+    shifted >>= (d1-d0)
+    bits1 = shifted & 1
+    xorbits = bits0 ^ bits1
     return 1. - 2. * xorbits
 
 ## the most powerful improvement!!!  Pairing the basis according to a qubit flip at position dig
