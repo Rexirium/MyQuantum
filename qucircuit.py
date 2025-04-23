@@ -488,9 +488,9 @@ if __name__=='__main__':
     fig, ax =plt.subplots()
     n, bins, patches = ax.hist(results, num_bins, density=True)
     probxs = p0*gaussian_distr(bins, 2., 1.) + p1*gaussian_distr(bins, -2., 1.)
+    end = time.perf_counter()
     ax.plot(bins,probxs, '--')
     fig.tight_layout()
     plt.show()
-    end = time.perf_counter()
     print("Running time is {:.6f} ms".format(1000*(end - start)))
     
