@@ -7,7 +7,7 @@ def twobits(num, dig:tuple):
     d0, d1 = sorted(dig)
     shifted = num >> d0
     bits0 = shifted & 1
-    shifted >>=(d1-d0-1)
+    shifted >>= (d1 - d0 - 1)
     bits1 = shifted & 2
     return bits1 | bits0
     
@@ -43,18 +43,18 @@ def flipp_twopairs(basis, dig:tuple):
     mask1 = (bits==1)
     mask2 = (bits==2)
     mask3 = (bits==3)
-    lower = np.concatenate((basis[mask0],basis[mask1]))
-    upper = np.concatenate((basis[mask3],basis[mask2]))
+    lower = np.concatenate((basis[mask0], basis[mask1]))
+    upper = np.concatenate((basis[mask3], basis[mask2]))
     return lower, upper
 
 def flipp_twopairs2(basis, dig:tuple):
     bits = twobits(basis, dig)
-    lower = np.flatnonzero((bits==0)|(bits==1))
-    upper = np.flatnonzero((bits==3)|(bits==2))
+    lower = np.flatnonzero((bits==0) | (bits==1))
+    upper = np.flatnonzero((bits==3) | (bits==2))
     return lower, upper
 # hamming distance
 def hammingD(x:int, y:int)->int:
-    xor = x^y
+    xor = x ^ y
     dist = 0
     while xor:
         xor &= xor - 1

@@ -289,7 +289,7 @@ class QuRegister:
     
     def ZZevolve(self, pos:tuple, para:float):
         co, isi = ma.cos(para), 1j*ma.sin(para)
-        dig = self.num_qubits-pos[0], self.num_qubits-pos[1]
+        dig = self.num_qubits-pos[0], self.num_qubits - pos[1]
         sign = twobits_sign(self.basis, dig)
         phase = co - isi*sign # exp(-1j*para)
         self.state *= phase
@@ -297,7 +297,7 @@ class QuRegister:
     
     def XXevolve(self, pos:tuple, para:float):
         co, isi = ma.cos(para), 1j*ma.sin(para)
-        dig = self.num_qubits - pos[0], self.num_qubits-pos[1]
+        dig = self.num_qubits - pos[0], self.num_qubits - pos[1]
         zold, znew = flipp_twopairs(self.basis, dig)
         statold, statnew = self.state[zold], self.state[znew]
         self.state[zold], self.state[znew] = co*statold - isi*statnew,\
