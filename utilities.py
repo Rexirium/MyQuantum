@@ -1,7 +1,7 @@
 import numpy as np
 # read the bit of the digit 'dig' of the string num in binary representation
 def onebit(num, dig:int):
-    return (num >> dig) & 1
+    return (num >> dig) & 1 == 1
 
 def twobits(num, dig:tuple):
     d0, d1 = sorted(dig)
@@ -67,11 +67,13 @@ def Norm2(v:np.ndarray):
     return np.dot(v.conj(), v).real
 
 if __name__ == "__main__":
+    import time
     rng = np.random.default_rng()
-    basis = np.arange(1<<5)
-    arr = rng.integers(5, size=2)
-    dig = arr[0], arr[1]
-    print(arr)
-    print(flipp_twopairs(basis, dig))
-    print(flipp_twopairs2(basis, dig))
+    basis = np.arange(1<<20)
+    digs = rng.integers(20, size=100)
+    start = time.perf_counter()
+    for (i, dig) in enumerate(digs):
+        onebit(basis, dig)
+    end = time.perf_counter()
+    print("runtime is {:.6f}".format(end - start))
     

@@ -133,15 +133,13 @@ class QuRegister:
         return newstate 
     
     def Phgate(self, pos:int, phase:float): #Phase gate
-        bits = onebit(self.basis, self.num_qubits - pos)
-        mask = (bits==1)
+        mask = onebit(self.basis, self.num_qubits - pos)
         ephase = np.exp(1j*phase)
         self.state[mask] *= ephase
         return
     
     def Phgate_ret(self, pos:int, phase:float): #Phase gate
-        bits = onebit(self.basis, self.num_qubits - pos)
-        mask = (bits==1)
+        mask = onebit(self.basis, self.num_qubits - pos)
         ephase = np.exp(1j*phase)
         newstate = self.state.copy()
         newstate[mask] *= ephase
@@ -218,16 +216,16 @@ class QuRegister:
     def CZgate(self, pos:tuple):
         control = onebit(self.basis, self.num_qubits-pos[0])
         target = onebit(self.basis, self.num_qubits-pos[1])
-        bits = control&target
-        signs = np.where(bits==1, -1., 1.)
+        bits = control & target
+        signs = 1. - 2. * bits
         self.state *= signs
         return 
         
     def CZgate_ret(self, pos:tuple):
         control = onebit(self.basis, self.num_qubits-pos[0])
         target = onebit(self.basis, self.num_qubits-pos[1])
-        bits = control&target
-        signs = np.where(bits==1, -1., 1.)
+        bits = control & target
+        signs = 1. - 2. * bits
         return self.state*signs
     
     # the acting of transverse field H=\sum_i X_i is slow using the method above due to copy frequently 
@@ -339,7 +337,7 @@ class QuRegister:
     
     # single qubit projection measurement of X Z operator
     def proj_measureZ(self, pos:int, kill = False): 
-        mask = onebit(self.basis, self.num_qubits - pos).astype(bool)
+        mask = onebit(self.basis, self.num_qubits - pos)
         filtered = self.state[mask]
         prob1 = Norm2(filtered) 
         prob0 = 1 - prob1
@@ -362,7 +360,7 @@ class QuRegister:
         return res
     
     def proj_measureZ_multi(self, pos:int, counts): # if evolve take True, then counts must be 1
-        mask = onebit(self.basis, self.num_qubits - pos).astype(bool)
+        mask = onebit(self.basis, self.num_qubits - pos)
         filtered = self.state[mask]
         prob1 = Norm2(filtered) 
         prob0 = 1 - prob1
@@ -400,7 +398,7 @@ class QuRegister:
         
     # weak measurement at position 'pos' on spin Z. return the coordinate of the probe
     def weak_measureZ(self, pos:int, lam:float, sigma:float):
-        mask = onebit(self.basis, self.num_qubits-pos).astype(bool)
+        mask = onebit(self.basis, self.num_qubits-pos)
         filtered = self.state[mask]
         prob1 = Norm2(filtered)
         prob0 = 1 - prob1
@@ -416,7 +414,7 @@ class QuRegister:
         return xres
     
     def weak_measureZ_multi(self, pos:int, lam:float, sigma:float, counts):
-        mask = onebit(self.basis, self.num_qubits-pos).astype(bool)
+        mask = onebit(self.basis, self.num_qubits-pos)
         filtered = self.state[mask]
         prob1 = Norm2(filtered)
         prob0 = 1 - prob1
