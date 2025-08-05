@@ -20,6 +20,7 @@ qc.CXgate((1, 2))
 qc.Hgate(1)
 res1 = qc.proj_measureZ(1, kill=True)
 res2 = qc.proj_measureZ(1, kill=True)
+print(qc.state)
 if res2:
     qc.Xgate(1)
 if res1:
